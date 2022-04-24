@@ -26,13 +26,13 @@ int main (int argc, char* argv[])
     {
 
         string firstPart = line.substr(0,line.find(" "));
-        firstPart = firstPart.substr(2,firstPart.size()-4);
+        firstPart = firstPart.substr(2,firstPart.size()-5);
         if(firstPart.size() < 5){
             firstPart = "0" + firstPart;
         }
         int pageNum = stoi(firstPart,nullptr,16);
 
-        char access = line.at(line.size()-1);
+        char access = line.at(line.length()-1);
 
         //cout << pageNum << endl;
         //cout << access << endl;
