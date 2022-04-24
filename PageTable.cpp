@@ -294,6 +294,11 @@ PageTable::PageTable(string algo, int size, bool verbose) {
     count = 0;
     this->size = size;
     this->verbose = verbose;
+
+    missCount = 0;
+    dropCount=0;
+    writeCount = 0;
+
 }
 
 void PageTable::printVerbose(int oldPage, int newPage, string type) {
