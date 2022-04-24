@@ -299,3 +299,19 @@ PageTable::PageTable(string algo, int size, bool verbose) {
 void PageTable::printVerbose(int oldPage, int newPage, string type) {
     cout << newPage << " " << type << " " << oldPage << endl;
 }
+
+void PageTable::setVerbose(bool verbose) {
+    this->verbose = verbose;
+}
+
+int PageTable::getDropCount() {
+    return dropCount;
+}
+
+int PageTable::getWriteCount() {
+    return writeCount;
+}
+
+int PageTable::getMisses() {
+    return missCount;
+}

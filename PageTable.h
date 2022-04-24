@@ -36,17 +36,11 @@ public:
 
     PageTable(string algo, int size, bool verbose);
 
-    int getMisses(){
-        return missCount;
-    }
+    int getMisses();
 
-    int getWriteCount(){
-        return writeCount;
-    }
+    int getWriteCount();
 
-    int getDropCount(){
-        return dropCount;
-    }
+    int getDropCount();
 
     void insert(int pageNum, char access);
 
@@ -64,9 +58,7 @@ public:
 
     list<Page>::iterator checkInList(int pageNum);
 
-    void setVerbose(bool verbose){
-        this->verbose = verbose;
-    }
+    void setVerbose(bool verbose);
 
     void printVerbose(int oldPage, int newPage, string type);
 
