@@ -254,12 +254,12 @@ void PageTable::FIFOinsert(int pageNum, char access) {
 
         if(count < size){ // free frame exists
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
-            queue.push(pageNum); //push the pageNum into the queue
+            q.push(pageNum); //push the pageNum into the queue
 
             count++;
         }else{ //no free frame; need to pop the first element from queue
-            int firstInQueue = queue.front();
-            queue.pop(); // delete first element
+            int firstInQueue = q.front();
+            q.pop(); // delete first element
 
             Page victim = pageTable.at(firstInQueue); // the victim to be kicked out
             if(victim.dirty){ // page has been modified
@@ -278,7 +278,7 @@ void PageTable::FIFOinsert(int pageNum, char access) {
             pageTable.erase(firstInQueue); //remove victim from frame
 
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
-            queue.push(pageNum); //push the pageNum into the queue
+            q.push(pageNum); //push the pageNum into the queue
         }
     }else{ //page already exists; check if read/write changes
         if(access == 'W'){

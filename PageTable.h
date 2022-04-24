@@ -19,7 +19,7 @@ class PageTable {
 private:
     //tuple: modified bit, read, write
     unordered_map<int, Page> pageTable;
-    queue<int> queue;
+    queue<int> q;
     list<Page> recentUsedList;
 
     string algo;
