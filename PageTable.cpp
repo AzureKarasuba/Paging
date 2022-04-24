@@ -167,29 +167,30 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
         page->write_copy = true;
     }
 
-    if(!check(pageNum)){ // page not found in frame
+    list<Page>::iterator iter = checkInList(pageNum);
+    if(iter == recentUsedList.end()){ // page not found in frame
 
         if(count < size){ // free frame exists
             ObligatoryMiss++;
-            pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
+            recentUsedList.push_back(*page); // load the page into frame
             count++;
         }else{ //no free frame; need to loop through all elements
             missCount++;
-            auto iterator = pageTable.begin();
+            list<Page>::iterator iterator;
             bool found = false;
             while(!found){
-                for(iterator = pageTable.begin(); iterator!= pageTable.end(); iterator++){
-                    if(!iterator->second.read_copy && !iterator->second.write_copy){//able to be swapped
+                for(iterator = recentUsedList.begin(); iterator!= recentUsedList.end(); iterator++){
+                    if(!iterator->read_copy && !iterator->write_copy){//able to be swapped
                         found = true;
                         break;
-                    }else if(iterator->second.write_copy){
-                        iterator->second.write_copy = false;
-                    }else if(iterator->second.read_copy){
-                        iterator->second.read_copy = false;
+                    }else if(iterator->write_copy){
+                        iterator->write_copy = false;
+                    }else if(iterator->read_copy){
+                        iterator->read_copy = false;
                     }
                 }//end for
             }//end while
-            Page victim = iterator->second;
+            Page victim = *iterator;
             if(victim.dirty){ // page has been modified
                 writeCount++;
                 if(verbose) {
@@ -201,15 +202,16 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
                     printVerbose(victim.page, pageNum, "overwrites");
                 }
             }
-            pageTable.erase(iterator->first); // remove victim
-            pageTable.insert(make_pair(pageNum,*page));
+            recentUsedList.erase(iterator); // remove victim
+            recentUsedList.push_back(*page);
 
         }
     }else{ //page already exists; check if read/write changes
         if(access == 'W'){
-            Page *current = &pageTable.at(pageNum);
-            current->write = true;
-            current->dirty = true;
+            iter->write = true;
+            iter->dirty = true;
+
+            iter->write_copy = true;
         }
     }
 }//GlobalClockInsert
