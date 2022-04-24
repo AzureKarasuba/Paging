@@ -161,6 +161,8 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
     if(access == 'W'){
         page->dirty = true;
         page->write = true;
+
+        page->write_copy = true;
     }
 
     if(!check(pageNum)){ // page not found in frame
@@ -170,12 +172,13 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
             count++;
         }else{ //no free frame; need to loop through all elements
-            unordered_map<int,Page>::iterator iterator;
+            auto iterator = pageTable.begin();
             bool found = false;
             while(!found){
                 for(iterator = pageTable.begin(); iterator!= pageTable.end(); iterator++){
                     if(!iterator->second.read_copy && !iterator->second.write_copy){//able to be swapped
                         found = true;
+                        break;
                     }else if(iterator->second.write_copy){
                         iterator->second.write_copy = false;
                     }else if(iterator->second.read_copy){
