@@ -29,6 +29,7 @@ private:
     bool verbose;
 
     int missCount;
+    int ObligatoryMiss;
     int writeCount;
     int dropCount;
 
@@ -41,6 +42,8 @@ public:
     int getWriteCount();
 
     int getDropCount();
+
+    int getObligatoryMiss();
 
     void insert(int pageNum, char access);
 

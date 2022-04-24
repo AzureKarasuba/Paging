@@ -12,12 +12,12 @@ void PageTable::LFUinsert(int pageNum, char access) {
     }
 
     if(!check(pageNum)){ //page not found
-        missCount++;
-
         if(count < size){ //free frame exists
+            ObligatoryMiss++;
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
             count++;
         }else{ // no free frame
+            missCount++;
             unordered_map<int, Page>::iterator iterator;
             Page victim = pageTable.begin()->second;
             int leastFrequency = victim.frequency;
@@ -49,12 +49,12 @@ void PageTable::LFUinsert(int pageNum, char access) {
 
         }
     }else{//page already exists
-        Page p = pageTable.at(pageNum);
-        p.frequency++; //increment frequency
+        Page *p = &pageTable.at(pageNum);
+        p->frequency++; //increment frequency
 
         if(access == 'W'){
-            p.write = true;
-            p.dirty = true;
+            p->write = true;
+            p->dirty = true;
         }
     }
 }
@@ -67,12 +67,13 @@ void PageTable::MFUinsert(int pageNum, char access) {
     }
 
     if(!check(pageNum)){ //page not found
-        missCount++;
 
         if(count < size){ //free frame exists
+            ObligatoryMiss++;
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
             count++;
         }else{ // no free frame
+            missCount++;
             unordered_map<int, Page>::iterator iterator;
             Page victim = pageTable.begin()->second;
             int mostFrequency = victim.frequency;
@@ -103,12 +104,12 @@ void PageTable::MFUinsert(int pageNum, char access) {
 
         }
     }else{//page already exists
-        Page p = pageTable.at(pageNum);
-        p.frequency++; //increment frequency
+        Page *p = &pageTable.at(pageNum);
+        p->frequency++; //increment frequency
 
         if(access == 'W'){
-            p.write = true;
-            p.dirty = true;
+            p->write = true;
+            p->dirty = true;
         }
     }
 }//MFU insert
@@ -122,12 +123,13 @@ void PageTable::LRUinsert(int pageNum, char access) {
 
     list<Page>::iterator iter = checkInList(pageNum); // looks for the page in list
     if(iter == recentUsedList.end()){ //page not found
-        missCount++;
 
         if(count < size){ //free frame exists
+            ObligatoryMiss++;
             recentUsedList.push_back(*page); // put the page into the recent used list
             count++;
         }else{ // no free frame
+            missCount++;
             Page victim = recentUsedList.front();
 
             if(victim.dirty){ // page has been modified
@@ -166,12 +168,13 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
     }
 
     if(!check(pageNum)){ // page not found in frame
-        missCount++;
 
         if(count < size){ // free frame exists
+            ObligatoryMiss++;
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
             count++;
         }else{ //no free frame; need to loop through all elements
+            missCount++;
             auto iterator = pageTable.begin();
             bool found = false;
             while(!found){
@@ -204,9 +207,9 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
         }
     }else{ //page already exists; check if read/write changes
         if(access == 'W'){
-            Page current = pageTable.at(pageNum);
-            current.write = true;
-            current.dirty = true;
+            Page *current = &pageTable.at(pageNum);
+            current->write = true;
+            current->dirty = true;
         }
     }
 }//GlobalClockInsert
@@ -250,14 +253,15 @@ void PageTable::FIFOinsert(int pageNum, char access) {
     }
 
     if(!check(pageNum)){ // page not found in frame
-        missCount++;
 
         if(count < size){ // free frame exists
+            ObligatoryMiss++;
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
             q.push(pageNum); //push the pageNum into the queue
 
             count++;
         }else{ //no free frame; need to pop the first element from queue
+            missCount++;
             int firstInQueue = q.front();
             q.pop(); // delete first element
 
@@ -322,4 +326,8 @@ int PageTable::getWriteCount() {
 
 int PageTable::getMisses() {
     return missCount;
+}
+
+int PageTable::getObligatoryMiss() {
+    return ObligatoryMiss;
 }
