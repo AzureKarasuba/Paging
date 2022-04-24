@@ -282,9 +282,9 @@ void PageTable::FIFOinsert(int pageNum, char access) {
         }
     }else{ //page already exists; check if read/write changes
         if(access == 'W'){
-            Page current = pageTable.at(pageNum);
-            current.write = true;
-            current.dirty = true;
+            Page *current = &pageTable.at(pageNum);
+            current->write = true;
+            current->dirty = true;
         }
     }
 }
