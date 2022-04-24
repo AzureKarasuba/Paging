@@ -261,6 +261,7 @@ void PageTable::FIFOinsert(int pageNum, char access) {
             Page victim = pageTable.at(firstInQueue); // the victim to be kicked out
             if(victim.dirty){ // page has been modified
                 writeCount++;
+
                 if(verbose) {
                     printVerbose(firstInQueue, pageNum, "swaps");
                 }
