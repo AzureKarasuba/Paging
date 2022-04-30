@@ -184,9 +184,9 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
             bool found = false;
             while(!found){
                 for(iterator = lastTimeIter; iterator!= recentUsedList.end(); iterator++){
+                    lastTimeIter = iterator;
                     if(!iterator->read_copy && !iterator->write_copy){//able to be swapped
                         found = true;
-                        lastTimeIter = iterator;
                         break;
                     }else if(iterator->write_copy){
                         iterator->write_copy = false;
@@ -194,6 +194,9 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
                         iterator->read_copy = false;
                     }
                 }//end for
+                if(!found){
+                    lastTimeIter = recentUsedList.begin();
+                }
             }//end while
 
             if(iterator->dirty){ // page has been modified
