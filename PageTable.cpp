@@ -160,6 +160,9 @@ void PageTable::LRUinsert(int pageNum, char access) {
 
 void PageTable::GlobalClockInsert(int pageNum, char access) {
     Page *page = new Page(pageNum, false,true,false,1); // default: read
+
+    list<Page>::iterator lastTimeIter = recentUsedList.begin();
+
     if(access == 'W'){
         page->dirty = true;
         page->write = true;
@@ -179,9 +182,10 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
             list<Page>::iterator iterator;
             bool found = false;
             while(!found){
-                for(iterator = recentUsedList.begin(); iterator!= recentUsedList.end(); iterator++){
+                for(iterator = lastTimeIter; iterator!= recentUsedList.end(); iterator++){
                     if(!iterator->read_copy && !iterator->write_copy){//able to be swapped
                         found = true;
+                        lastTimeIter = iterator;
                         break;
                     }else if(iterator->write_copy){
                         iterator->write_copy = false;
