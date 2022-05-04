@@ -159,23 +159,22 @@ void PageTable::LRUinsert(int pageNum, char access) {
 }//LRU
 
 void PageTable::GlobalClockInsert(int pageNum, char access) {
+    Page *page = new Page(pageNum, false,true,false,1); // default: read
 
     list<Page>::iterator lastTimeIter = recentUsedList.begin();
-    list<Page>::iterator iter = checkInList(pageNum);
 
+    if(access == 'W'){
+        page->dirty = true;
+        page->write = true;
+
+        page->write_copy = true;
+    }
+
+    list<Page>::iterator iter = checkInList(pageNum);
     if(iter == recentUsedList.end()){ // page not found in frame
 
         if(count < size){ // free frame exists
             ObligatoryMiss++;
-
-            Page *page = new Page(pageNum, false,true,false,1); // default: read
-            if(access == 'W'){
-                page->dirty = true;
-                page->write = true;
-
-                page->write_copy = true;
-            }
-
             recentUsedList.push_back(*page); // load the page into frame
             count++;
         }else{ //no free frame; need to loop through all elements
@@ -210,22 +209,8 @@ void PageTable::GlobalClockInsert(int pageNum, char access) {
                     printVerbose(iterator->page, pageNum, "overwrites");
                 }
             }
-
-            iterator->page = pageNum;
-            iterator->read = true;
-            iterator->read_copy = true;
-            iterator->frequency = 1;
-            if(access == 'W'){
-                iterator->dirty = true;
-                iterator->write = true;
-                iterator->write_copy = true;
-            }
-
-            /*
             recentUsedList.erase(iterator); // remove victim
             recentUsedList.push_back(*page);
-
-            */
 
         }
     }else{ //page already exists; check if read/write changes
