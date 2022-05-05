@@ -1,0 +1,1 @@
+g++ main.cpp Page.cpp PageTable.cpp -o xr22

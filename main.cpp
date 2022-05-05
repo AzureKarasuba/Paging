@@ -42,11 +42,11 @@ int main (int argc, char* argv[])
 
     }
 
-    cout << "Number of memory access: " << memAccessNum << endl;
-    cout << "Number of obligatory misses: " << pageTable.getObligatoryMiss() << endl;
-    cout << "Number of misses: " << pageTable.getMisses() << endl;
-    cout << "Number of writes: " << pageTable.getWriteCount() << endl;
-    cout << "Number of drops: " << pageTable.getDropCount() << endl;
+    cout << "Number of memory access: " << std::dec << memAccessNum << endl;
+    cout << "Number of obligatory misses: " << std::dec << pageTable.getObligatoryMiss() << endl;
+    cout << "Number of misses: " << std::dec << pageTable.getMisses() << endl;
+    cout << "Number of writes: " << std::dec << pageTable.getWriteCount() << endl;
+    cout << "Number of drops: " << std::dec << pageTable.getDropCount() << endl;
 
     return 0;
 }

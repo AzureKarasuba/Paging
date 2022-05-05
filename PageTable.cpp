@@ -318,7 +318,7 @@ PageTable::PageTable(string algo, int size, bool verbose) {
 }
 
 void PageTable::printVerbose(int oldPage, int newPage, string type) {
-    cout << "Page " << newPage << " " << type << " " << oldPage << endl;
+    cout << "Page " << std::hex << newPage << " " << type << " " << std::hex << oldPage << endl;
 }
 
 void PageTable::setVerbose(bool verbose) {
