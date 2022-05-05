@@ -5,13 +5,14 @@
 #include "PageTable.h"
 
 void PageTable::LFUinsert(int pageNum, char access) {
-    Page* page = new Page(pageNum, false,true,false,1); // default: read
-    if(access == 'W'){
-        page->dirty = true;
-        page->write = true;
-    }
+
 
     if(!check(pageNum)){ //page not found
+        Page* page = new Page(pageNum, false,true,false,1); // default: read
+        if(access == 'W'){
+            page->dirty = true;
+            page->write = true;
+        }
         if(count < size){ //free frame exists
             ObligatoryMiss++;
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
@@ -60,14 +61,13 @@ void PageTable::LFUinsert(int pageNum, char access) {
 }
 
 void PageTable::MFUinsert(int pageNum, char access) {
-    Page *page = new Page(pageNum, false,true,false,1); // default: read
-    if(access == 'W'){
-        page->dirty = true;
-        page->write = true;
-    }
 
     if(!check(pageNum)){ //page not found
-
+        Page *page = new Page(pageNum, false,true,false,1); // default: read
+        if(access == 'W'){
+            page->dirty = true;
+            page->write = true;
+        }
         if(count < size){ //free frame exists
             ObligatoryMiss++;
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
@@ -115,14 +115,16 @@ void PageTable::MFUinsert(int pageNum, char access) {
 }//MFU insert
 
 void PageTable::LRUinsert(int pageNum, char access) {
-    Page *page = new Page(pageNum, false,true,false,1); // default: read
-    if(access == 'W'){
-        page->dirty = true;
-        page->write = true;
-    }
+
 
     list<Page>::iterator iter = checkInList(pageNum); // looks for the page in list
     if(iter == recentUsedList.end()){ //page not found
+
+        Page *page = new Page(pageNum, false,true,false,1); // default: read
+        if(access == 'W'){
+            page->dirty = true;
+            page->write = true;
+        }
 
         if(count < size){ //free frame exists
             ObligatoryMiss++;
@@ -159,20 +161,20 @@ void PageTable::LRUinsert(int pageNum, char access) {
 }//LRU
 
 void PageTable::GlobalClockInsert(int pageNum, char access) {
-    Page *page = new Page(pageNum, false,true,false,1); // default: read
 
     list<Page>::iterator lastTimeIter = recentUsedList.begin();
 
-    if(access == 'W'){
-        page->dirty = true;
-        page->write = true;
 
-        page->write_copy = true;
-    }
 
     list<Page>::iterator iter = checkInList(pageNum);
     if(iter == recentUsedList.end()){ // page not found in frame
+        Page *page = new Page(pageNum, false,true,false,1); // default: read
+        if(access == 'W'){
+            page->dirty = true;
+            page->write = true;
 
+            page->write_copy = true;
+        }
         if(count < size){ // free frame exists
             ObligatoryMiss++;
             recentUsedList.push_back(*page); // load the page into frame
@@ -255,14 +257,14 @@ void PageTable::insert(int pageNum, char access) {
 }
 
 void PageTable::FIFOinsert(int pageNum, char access) {
-    Page *page = new Page(pageNum, false,true,false,1); // default: read
-    if(access == 'W'){
-        page->dirty = true;
-        page->write = true;
-    }
+
 
     if(!check(pageNum)){ // page not found in frame
-
+        Page *page = new Page(pageNum, false,true,false,1); // default: read
+        if(access == 'W'){
+            page->dirty = true;
+            page->write = true;
+        }
         if(count < size){ // free frame exists
             ObligatoryMiss++;
             pageTable.insert(make_pair(pageNum,*page)); // load the page into frame
@@ -340,3 +342,5 @@ int PageTable::getMisses() {
 int PageTable::getObligatoryMiss() {
     return ObligatoryMiss;
 }
+
+

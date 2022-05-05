@@ -36,6 +36,7 @@ private:
 public:
 
     PageTable(string algo, int size, bool verbose);
+    ~PageTable();
 
     int getMisses();
 
